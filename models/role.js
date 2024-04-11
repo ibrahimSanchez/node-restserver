@@ -14,4 +14,26 @@ const Role = sequelize.define('role', {
 });
 
 
+// sequelize.sync({force: true})
+//     .then(() => {
+//         console.log('Modelo sincronizado correctamente');
+//         // Insertar los 3 roles
+//         Role.bulkCreate([
+//             { role: 'ADMIN_ROLE' },
+//             { role: 'USER_ROLE' },
+//             { role: 'SALES_ROLE' }
+//         ])
+//             .then(() => {
+//                 console.log('Roles insertados con éxito');
+//             })
+//             .catch((error) => {
+//                 console.error('Error al insertar roles:', error);
+//             });
+//     })
+//     .catch((error) => {
+//         console.error('Error al sincronizar el modelo:', error);
+//     })
+
+
+
 module.exports = { Role };

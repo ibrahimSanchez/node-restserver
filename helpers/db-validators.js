@@ -1,5 +1,7 @@
-const { Role } = require('../models/role');
-const { User } = require('../models/user');
+// const { Category, Role, User } = require('../models');
+const { Category } = require("../models/category");
+const { User } = require("../models/user");
+const { Role } = require("../models/role");
 
 
 // todo--------------------------------------------------------------------------------------
@@ -7,7 +9,7 @@ const { User } = require('../models/user');
 // todo--------------------------------------------------------------------------------------
 const isRoleValid = async (role = '') => {
     const existRole = await Role.findAll({ where: { role } });
-   
+
     if (existRole.length === 0) {
         throw new Error(`El rol ${role} no esta en la BD`);
     }
@@ -35,8 +37,19 @@ const existUser = async (id = '') => {
 }
 
 
+// todo--------------------------------------------------------------------------------------
+// todo------------------------------    exist category   -----------------------------------
+// todo--------------------------------------------------------------------------------------
+const existCategory = async (id = '') => {
+    const category = await Category.findByPk(id);
+    if (!category || !category.state)
+        throw new Error(`No existe la categoria con id ${id}`);
+}
+
+
 module.exports = {
     isRoleValid,
     existEmail,
-    existUser
+    existUser,
+    existCategory
 }

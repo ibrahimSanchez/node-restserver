@@ -18,7 +18,7 @@ const usersGet = async (req = request, res = response) => {
                 limit: Number(limit) ? Number(limit) : 10,
                 offset: Number(start) ? Number(start) : 0,
                 order: ['id'],
-                q
+                where: { state: true }
             })
         ]);
 

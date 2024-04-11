@@ -59,3 +59,7 @@ router.delete('/:id', [
 
 
 module.exports = router;
+
+
+
+// http://localhost:8080/api/users
