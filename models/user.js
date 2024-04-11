@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes } = require("sequelize");
-const sequelize = new Sequelize(`postgres://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`);
+const sequelize = new Sequelize(`${process.env.CONNECTION_DB}`);
 
 
 const User = sequelize.define("user", {
@@ -63,9 +63,12 @@ const User = sequelize.define("user", {
 
 User.prototype.toJSON = function () {
     const values = { ...this.get() };
+    const id = values.id;
     delete values.password;
     delete values.updatedAt;
     delete values.createdAt;
+    delete values.id;
+    values.uid = id;
     return values;
 };
 

@@ -92,10 +92,10 @@ const usersDelete = async (req = request, res = response) => {
 
     const { id } = req.params;
 
-    try {
-        // borrar fisicamente
-        // const user = await User.destroy({ where: { id } });
+    const { user: userAuth } = req;
 
+    try {
+      
         const user = await User.findByPk(id);
         if (user.state) {
             user.state = false;
@@ -103,7 +103,8 @@ const usersDelete = async (req = request, res = response) => {
 
             res.json({
                 msg: 'Usuario eliminado correctamente',
-                user
+                user,
+                userAuth
             });
         } else
             res.status(404).json({
