@@ -2,6 +2,7 @@
 const { Category } = require("../models/category");
 const { User } = require("../models/user");
 const { Role } = require("../models/role");
+const { Product } = require("../models/product");
 
 
 // todo--------------------------------------------------------------------------------------
@@ -38,7 +39,7 @@ const existUser = async (id = '') => {
 
 
 // todo--------------------------------------------------------------------------------------
-// todo------------------------------    exist category   -----------------------------------
+// todo------------------------------    exist Product   ------------------------------------
 // todo--------------------------------------------------------------------------------------
 const existCategory = async (id = '') => {
     const category = await Category.findByPk(id);
@@ -47,9 +48,18 @@ const existCategory = async (id = '') => {
 }
 
 
+const existProduct = async (id = '') => {
+    const product = await Product.findByPk(id);
+    if (!product || !product.state)
+        throw new Error(`No existe el producto con id ${id}`);
+}
+
+
+
 module.exports = {
     isRoleValid,
     existEmail,
     existUser,
-    existCategory
+    existCategory,
+    existProduct
 }

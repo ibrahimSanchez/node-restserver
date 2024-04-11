@@ -1,36 +1,33 @@
 const { Category } = require("../models/category");
-
+const { Product } = require("../models/product");
 
 
 // todo--------------------------------------------------------------------------------------
 // todo------------------------------    create   -------------------------------------------
 // todo--------------------------------------------------------------------------------------
-const createCategory = async (req, res) => {
+const createProduct = async (req, res) => {
 
-    const name = req.body.name.toUpperCase();
+    const { category, name, ...data } = req.body;
 
     try {
-        const categoryDB = await Category.findOne({
+        const productDB = await Product.findOne({
             where: { name }
         });
 
-        if (categoryDB)
+        if (productDB)
             return res.status(400).json({
-                msg: `La categoria ${categoryDB.name} existe`
+                msg: `El producto ${name} existe`
             });
 
+        data.name = name;
+        data.userId = req.user.id
 
-        const data = {
-            name,
-            userId: req.user.id
-        }
-
-        const category = await new Category(data)
-        category.save();
+        const product = await new Product(data)
+        product.save();
 
         res.status(201).json({
-            msg: `Categoria "${name}" creada`,
-            category
+            msg: `Producto "${name}" creado`,
+            product
         });
 
     } catch (error) {
@@ -45,18 +42,18 @@ const createCategory = async (req, res) => {
 
 
 // todo--------------------------------------------------------------------------------------
-// todo------------------------------    getCategory   --------------------------------------
+// todo--------------------------------    get all  -----------------------------------------
 // todo--------------------------------------------------------------------------------------
-const getCategoy = async (req, res) => {
+const getProduct = async (req, res) => {
 
     const { limit = 10, start = 0 } = req.query;
     const q = { where: { state: true } };
 
 
     try {
-        const [total, categories] = await Promise.all([
-            Category.count(q),
-            Category.findAll({
+        const [total, products] = await Promise.all([
+            Product.count(q),
+            Product.findAll({
                 limit: Number(limit) ? Number(limit) : 10,
                 offset: Number(start) ? Number(start) : 0,
                 order: ['id'],
@@ -66,12 +63,12 @@ const getCategoy = async (req, res) => {
 
         res.json({
             total,
-            categories
+            products
         });
     } catch (error) {
         console.log(error);
         res.status(400).json({
-            msg: 'No se pudo optener las categorias'
+            msg: 'No se pudo optener los productos'
         });
     }
 }
@@ -80,53 +77,52 @@ const getCategoy = async (req, res) => {
 
 
 // todo--------------------------------------------------------------------------------------
-// todo----------------------------    getCategoryById   ------------------------------------
+// todo-------------------------------    get by id   ---------------------------------------
 // todo--------------------------------------------------------------------------------------
-const getCategoyById = async (req, res) => {
+const getProductById = async (req, res) => {
 
     const { id } = req.params;
 
     try {
-        const category = await Category.findByPk(id)
+        const product = await Product.findByPk(id)
 
         res.json({
-            category
+            product
         });
     } catch (error) {
         console.log(error);
         res.status(400).json({
-            msg: 'No se pudo optener la categoria'
+            msg: 'No se pudo optener el producto'
         });
     }
 }
 
 
 // todo--------------------------------------------------------------------------------------
-// todo------------------------------    putCategory   --------------------------------------
+// todo------------------------------    put   --------------------------------------
 // todo--------------------------------------------------------------------------------------
-const putCategoy = async (req, res) => {
+const putProduct = async (req, res) => {
 
     const { id } = req.params;
 
-    const { state, userId, ...data } = req.body
-    data.name = data.name.toUpperCase();
+    const { state, userId, category, ...data } = req.body
     data.userId = req.user.id
 
     try {
-        const category = await Category.update(data, { where: { id } })
+        const product = await Product.update(data, { where: { id } })
 
-        if (category.length === 0)
+        if (product.length === 0)
             return res.status(400).json({
-                msg: 'No se pudo actualizar la categoria'
+                msg: 'No se pudo actualizar el producto'
             });
 
         res.json({
-            msg: 'actualizada'
+            msg: 'actualizado'
         });
     } catch (error) {
         console.log(error);
         res.status(400).json({
-            msg: 'No se pudo actualizar la categoria'
+            msg: 'No se pudo actualizar el producto'
         });
     }
 }
@@ -137,7 +133,7 @@ const putCategoy = async (req, res) => {
 // todo--------------------------------------------------------------------------------------
 // todo------------------------------    delete   -------------------------------------------
 // todo--------------------------------------------------------------------------------------
-const deleteCategory = async (req = request, res = response) => {
+const deleteProducty = async (req = request, res = response) => {
 
     const { id } = req.params;
 
@@ -145,25 +141,25 @@ const deleteCategory = async (req = request, res = response) => {
 
     try {
 
-        const category = await Category.findByPk(id);
-        if (category.state) {
-            category.state = false;
-            await category.save();
+        const product = await Product.findByPk(id);
+        if (product.state) {
+            product.state = false;
+            await product.save();
 
             res.json({
-                msg: 'Categoria eliminada correctamente',
-                category,
+                msg: 'Producto eliminado correctamente',
+                product,
                 user
             });
         } else
             res.status(404).json({
-                msg: 'La categoria no esta almacenada en la BD'
+                msg: 'El producto no esta almacenada en la BD'
             });
 
     } catch (error) {
         console.log(error);
         res.status(400).json({
-            msg: 'No se pudo eliminar la categoria'
+            msg: 'No se pudo eliminar el producto'
         });
     }
 }
@@ -172,9 +168,9 @@ const deleteCategory = async (req = request, res = response) => {
 
 
 module.exports = {
-    createCategory,
-    getCategoy,
-    getCategoyById,
-    putCategoy,
-    deleteCategory
+    createProduct,
+    getProduct,
+    getProductById,
+    putProduct,
+    deleteProducty
 }
