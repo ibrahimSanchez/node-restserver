@@ -27,7 +27,12 @@ const Product = sequelize.define('product', {
     available: {
         type: BOOLEAN,
         defaultValue: true
-    }
+    },
+
+    image: {
+        type: DataTypes.STRING
+        // allowNull: false,
+    },
 
 });
 
